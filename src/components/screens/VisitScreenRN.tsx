@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, TextInput, Alert, StyleSheet } from 'react-native';
-import { ArrowLeft, Phone, MapPin, Camera, Save } from 'lucide-react-native';
+import { ArrowLeft, Phone, MapPin, Camera, Save } from 'lucide-react';
 
 interface VisitScreenProps {
-  navigation: any;
-  route: any;
+  navigation?: any;
+  route?: any;
 }
 
 export function VisitScreen({ navigation, route }: VisitScreenProps) {
@@ -44,187 +43,165 @@ export function VisitScreen({ navigation, route }: VisitScreenProps) {
   };
 
   const handleSubmit = () => {
-    Alert.alert(
-      "Submit Visit",
-      "Are you sure you want to submit this visit report?",
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "Submit",
-          onPress: () => {
-            Alert.alert("Success", "Visit report submitted successfully!");
-            navigation.goBack();
-          }
-        }
-      ]
-    );
+    if (confirm("Are you sure you want to submit this visit report?")) {
+      alert("Visit report submitted successfully!");
+      navigation?.goBack?.();
+    }
   };
 
   const renderStepContent = () => {
     switch (currentStep) {
       case 0:
         return (
-          <View style={styles.stepContainer}>
-            <Text style={styles.stepTitle}>Customer Information</Text>
+          <div className="p-4">
+            <h2 className="text-lg font-semibold mb-4">Customer Information</h2>
             
-            <View style={styles.customerCard}>
-              <Text style={styles.customerName}>{customerData.name}</Text>
-              <Text style={styles.customerId}>ID: {customerData.id}</Text>
+            <div className="bg-white rounded-lg p-4 border border-gray-200">
+              <h3 className="font-semibold text-lg mb-1">{customerData.name}</h3>
+              <p className="text-sm text-gray-500 mb-3">ID: {customerData.id}</p>
               
-              <View style={styles.addressContainer}>
-                <MapPin size={16} color="gray" />
-                <Text style={styles.addressText}>{customerData.address}</Text>
-              </View>
+              <div className="flex items-center mb-2">
+                <MapPin size={16} className="text-gray-500" />
+                <span className="text-sm text-gray-700 ml-2">{customerData.address}</span>
+              </div>
               
-              <TouchableOpacity style={styles.phoneContainer}>
-                <Phone size={16} color="#3b82f6" />
-                <Text style={styles.phoneText}>{customerData.phone}</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+              <button className="flex items-center">
+                <Phone size={16} className="text-blue-500" />
+                <span className="text-sm text-blue-500 ml-2">{customerData.phone}</span>
+              </button>
+            </div>
+          </div>
         );
 
       case 1:
         return (
-          <View style={styles.stepContainer}>
-            <Text style={styles.stepTitle}>Visit Details</Text>
+          <div className="p-4">
+            <h2 className="text-lg font-semibold mb-4">Visit Details</h2>
             
-            <View style={styles.formSection}>
-              <View style={styles.questionContainer}>
-                <Text style={styles.questionText}>Was the customer met?</Text>
-                <View style={styles.buttonRow}>
-                  <TouchableOpacity
-                    onPress={() => setFormData({...formData, customerMet: true})}
-                    style={[
-                      styles.choiceButton,
-                      formData.customerMet === true ? styles.yesButton : styles.defaultButton
-                    ]}
+            <div className="space-y-4">
+              <div>
+                <p className="font-medium mb-2">Was the customer met?</p>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setFormData({...formData, customerMet: true})}
+                    className={`px-4 py-2 rounded-lg border ${
+                      formData.customerMet === true 
+                        ? 'bg-green-500 text-white border-green-500' 
+                        : 'bg-white text-gray-700 border-gray-300'
+                    }`}
                   >
-                    <Text style={[
-                      styles.choiceButtonText,
-                      formData.customerMet === true ? styles.whiteText : styles.defaultText
-                    ]}>Yes</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => setFormData({...formData, customerMet: false})}
-                    style={[
-                      styles.choiceButton,
-                      formData.customerMet === false ? styles.noButton : styles.defaultButton
-                    ]}
+                    Yes
+                  </button>
+                  <button
+                    onClick={() => setFormData({...formData, customerMet: false})}
+                    className={`px-4 py-2 rounded-lg border ${
+                      formData.customerMet === false 
+                        ? 'bg-red-500 text-white border-red-500' 
+                        : 'bg-white text-gray-700 border-gray-300'
+                    }`}
                   >
-                    <Text style={[
-                      styles.choiceButtonText,
-                      formData.customerMet === false ? styles.whiteText : styles.defaultText
-                    ]}>No</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
+                    No
+                  </button>
+                </div>
+              </div>
 
-              <View style={styles.questionContainer}>
-                <Text style={styles.questionText}>Visit completed?</Text>
-                <View style={styles.buttonRow}>
-                  <TouchableOpacity
-                    onPress={() => setFormData({...formData, visitDone: true})}
-                    style={[
-                      styles.choiceButton,
-                      formData.visitDone === true ? styles.yesButton : styles.defaultButton
-                    ]}
+              <div>
+                <p className="font-medium mb-2">Was the visit completed?</p>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setFormData({...formData, visitDone: true})}
+                    className={`px-4 py-2 rounded-lg border ${
+                      formData.visitDone === true 
+                        ? 'bg-green-500 text-white border-green-500' 
+                        : 'bg-white text-gray-700 border-gray-300'
+                    }`}
                   >
-                    <Text style={[
-                      styles.choiceButtonText,
-                      formData.visitDone === true ? styles.whiteText : styles.defaultText
-                    ]}>Yes</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => setFormData({...formData, visitDone: false})}
-                    style={[
-                      styles.choiceButton,
-                      formData.visitDone === false ? styles.noButton : styles.defaultButton
-                    ]}
+                    Yes
+                  </button>
+                  <button
+                    onClick={() => setFormData({...formData, visitDone: false})}
+                    className={`px-4 py-2 rounded-lg border ${
+                      formData.visitDone === false 
+                        ? 'bg-red-500 text-white border-red-500' 
+                        : 'bg-white text-gray-700 border-gray-300'
+                    }`}
                   >
-                    <Text style={[
-                      styles.choiceButtonText,
-                      formData.visitDone === false ? styles.whiteText : styles.defaultText
-                    ]}>No</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </View>
-          </View>
+                    No
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         );
 
       case 2:
         return (
-          <View style={styles.stepContainer}>
-            <Text style={styles.stepTitle}>Collection Details</Text>
+          <div className="p-4">
+            <h2 className="text-lg font-semibold mb-4">Collection Details</h2>
             
-            <View style={styles.formSection}>
-              <View style={styles.inputContainer}>
-                <Text style={styles.inputLabel}>Amount Collected (₹)</Text>
-                <TextInput
-                  style={styles.textInput}
-                  placeholder="Enter amount"
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">Amount Collected (₹)</label>
+                <input
+                  type="number"
                   value={formData.amountCollected}
-                  onChangeText={(text) => setFormData({...formData, amountCollected: text})}
-                  keyboardType="numeric"
+                  onChange={(e) => setFormData({...formData, amountCollected: e.target.value})}
+                  className="w-full p-3 border border-gray-300 rounded-lg"
+                  placeholder="Enter amount"
                 />
-              </View>
+              </div>
 
-              <View style={styles.inputContainer}>
-                <Text style={styles.inputLabel}>Comments</Text>
-                <TextInput
-                  style={[styles.textInput, styles.textArea]}
-                  placeholder="Enter any comments or notes..."
+              <div>
+                <label className="block text-sm font-medium mb-2">Comments</label>
+                <textarea
                   value={formData.comments}
-                  onChangeText={(text) => setFormData({...formData, comments: text})}
-                  multiline
-                  numberOfLines={4}
-                  textAlignVertical="top"
+                  onChange={(e) => setFormData({...formData, comments: e.target.value})}
+                  className="w-full p-3 border border-gray-300 rounded-lg h-24"
+                  placeholder="Add any additional comments..."
                 />
-              </View>
+              </div>
 
-              <TouchableOpacity style={styles.photoButton}>
-                <Camera size={20} color="gray" />
-                <Text style={styles.photoButtonText}>Add Photos</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+              <div>
+                <label className="block text-sm font-medium mb-2">Photos</label>
+                <button className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg">
+                  <Camera size={16} className="text-gray-500" />
+                  <span className="text-sm text-gray-700">Add Photo</span>
+                </button>
+              </div>
+            </div>
+          </div>
         );
 
       case 3:
         return (
-          <View style={styles.stepContainer}>
-            <Text style={styles.stepTitle}>Visit Summary</Text>
+          <div className="p-4">
+            <h2 className="text-lg font-semibold mb-4">Summary</h2>
             
-            <View style={styles.summaryCard}>
-              <View style={styles.summaryItem}>
-                <Text style={styles.summaryLabel}>Customer</Text>
-                <Text style={styles.summaryValue}>{customerData.name}</Text>
-              </View>
-              
-              <View style={styles.summaryItem}>
-                <Text style={styles.summaryLabel}>Customer Met</Text>
-                <Text style={styles.summaryValue}>{formData.customerMet ? 'Yes' : 'No'}</Text>
-              </View>
-              
-              <View style={styles.summaryItem}>
-                <Text style={styles.summaryLabel}>Visit Completed</Text>
-                <Text style={styles.summaryValue}>{formData.visitDone ? 'Yes' : 'No'}</Text>
-              </View>
-              
-              <View style={styles.summaryItem}>
-                <Text style={styles.summaryLabel}>Amount Collected</Text>
-                <Text style={styles.summaryValue}>₹{formData.amountCollected || '0'}</Text>
-              </View>
-              
+            <div className="bg-white rounded-lg p-4 border border-gray-200 space-y-3">
+              <div className="flex justify-between">
+                <span className="text-gray-600">Customer Met:</span>
+                <span className="font-medium">
+                  {formData.customerMet === true ? 'Yes' : formData.customerMet === false ? 'No' : 'Not specified'}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Visit Completed:</span>
+                <span className="font-medium">
+                  {formData.visitDone === true ? 'Yes' : formData.visitDone === false ? 'No' : 'Not specified'}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Amount Collected:</span>
+                <span className="font-medium">₹{formData.amountCollected || '0'}</span>
+              </div>
               {formData.comments && (
-                <View style={styles.summaryItem}>
-                  <Text style={styles.summaryLabel}>Comments</Text>
-                  <Text style={styles.summaryValue}>{formData.comments}</Text>
-                </View>
+                <div>
+                  <span className="text-gray-600">Comments:</span>
+                  <p className="text-sm mt-1">{formData.comments}</p>
+                </div>
               )}
-            </View>
-          </View>
+            </div>
+          </div>
         );
 
       default:
@@ -233,309 +210,71 @@ export function VisitScreen({ navigation, route }: VisitScreenProps) {
   };
 
   return (
-    <View style={styles.container}>
+    <div className="flex-1 bg-gray-50">
       {/* Header */}
-      <View style={styles.header}>
-        <View style={styles.headerTop}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <ArrowLeft size={24} color="black" />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Visit Report</Text>
-        </View>
+      <div className="bg-white p-4 border-b border-gray-200">
+        <div className="flex items-center justify-between">
+          <button onClick={() => navigation?.goBack?.()} className="p-2">
+            <ArrowLeft size={20} className="text-gray-600" />
+          </button>
+          <h1 className="text-lg font-semibold">Visit Report</h1>
+          <button onClick={handleSubmit} className="p-2">
+            <Save size={20} className="text-blue-500" />
+          </button>
+        </div>
         
         {/* Progress Steps */}
-        <View style={styles.progressContainer}>
+        <div className="flex mt-4">
           {steps.map((step, index) => (
-            <View key={index} style={styles.stepIndicator}>
-              <View style={[
-                styles.stepCircle,
-                index <= currentStep ? styles.activeStepCircle : styles.inactiveStepCircle
-              ]}>
-                <Text style={[
-                  styles.stepNumber,
-                  index <= currentStep ? styles.activeStepText : styles.inactiveStepText
-                ]}>{index + 1}</Text>
-              </View>
-              <Text style={styles.stepLabel}>{step}</Text>
-            </View>
+            <div key={index} className="flex-1 flex items-center">
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+                index <= currentStep ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-500'
+              }`}>
+                {index + 1}
+              </div>
+              {index < steps.length - 1 && (
+                <div className={`flex-1 h-1 mx-2 ${
+                  index < currentStep ? 'bg-blue-500' : 'bg-gray-200'
+                }`} />
+              )}
+            </div>
           ))}
-        </View>
-      </View>
+        </div>
+      </div>
 
       {/* Content */}
-      <ScrollView style={styles.content}>
+      <div className="flex-1">
         {renderStepContent()}
-      </ScrollView>
+      </div>
 
-      {/* Navigation Buttons */}
-      <View style={styles.navigationContainer}>
-        <View style={styles.navigationButtons}>
+      {/* Navigation */}
+      <div className="bg-white p-4 border-t border-gray-200">
+        <div className="flex gap-3">
           {currentStep > 0 && (
-            <TouchableOpacity
-              onPress={handlePrevious}
-              style={[styles.navButton, styles.previousButton]}
+            <button
+              onClick={handlePrevious}
+              className="flex-1 py-3 border border-gray-300 rounded-lg text-gray-700 font-medium"
             >
-              <Text style={styles.previousButtonText}>Previous</Text>
-            </TouchableOpacity>
+              Previous
+            </button>
           )}
-          
-          <TouchableOpacity
-            onPress={currentStep === steps.length - 1 ? handleSubmit : handleNext}
-            style={[styles.navButton, styles.nextButton]}
-          >
-            <View style={styles.nextButtonContent}>
-              {currentStep === steps.length - 1 && <Save size={16} color="white" />}
-              <Text style={styles.nextButtonText}>
-                {currentStep === steps.length - 1 ? 'Submit' : 'Next'}
-              </Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </View>
+          {currentStep < steps.length - 1 ? (
+            <button
+              onClick={handleNext}
+              className="flex-1 py-3 bg-blue-500 text-white rounded-lg font-medium"
+            >
+              Next
+            </button>
+          ) : (
+            <button
+              onClick={handleSubmit}
+              className="flex-1 py-3 bg-green-500 text-white rounded-lg font-medium"
+            >
+              Submit
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f9fafb',
-  },
-  header: {
-    backgroundColor: 'white',
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e5e7eb',
-  },
-  headerTop: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 16,
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#111827',
-  },
-  progressContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 16,
-  },
-  stepIndicator: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  stepCircle: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  activeStepCircle: {
-    backgroundColor: '#3b82f6',
-  },
-  inactiveStepCircle: {
-    backgroundColor: '#d1d5db',
-  },
-  stepNumber: {
-    fontSize: 12,
-    fontWeight: 'bold',
-  },
-  activeStepText: {
-    color: 'white',
-  },
-  inactiveStepText: {
-    color: '#6b7280',
-  },
-  stepLabel: {
-    fontSize: 10,
-    marginTop: 4,
-    textAlign: 'center',
-    color: '#111827',
-  },
-  content: {
-    flex: 1,
-    padding: 16,
-  },
-  stepContainer: {
-    gap: 24,
-  },
-  stepTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginBottom: 16,
-    color: '#111827',
-  },
-  customerCard: {
-    backgroundColor: 'white',
-    borderRadius: 8,
-    padding: 16,
-  },
-  customerName: {
-    fontSize: 16,
-    fontWeight: '500',
-    marginBottom: 8,
-    color: '#111827',
-  },
-  customerId: {
-    fontSize: 12,
-    color: '#6b7280',
-    marginBottom: 8,
-  },
-  addressContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  addressText: {
-    fontSize: 12,
-    color: '#6b7280',
-    marginLeft: 8,
-    flex: 1,
-  },
-  phoneContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  phoneText: {
-    color: '#3b82f6',
-    marginLeft: 8,
-  },
-  formSection: {
-    gap: 16,
-  },
-  questionContainer: {
-    marginBottom: 16,
-  },
-  questionText: {
-    fontSize: 16,
-    fontWeight: '500',
-    marginBottom: 12,
-    color: '#111827',
-  },
-  buttonRow: {
-    flexDirection: 'row',
-    gap: 12,
-  },
-  choiceButton: {
-    flex: 1,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderRadius: 8,
-    borderWidth: 1,
-  },
-  defaultButton: {
-    backgroundColor: 'white',
-    borderColor: '#d1d5db',
-  },
-  yesButton: {
-    backgroundColor: '#22c55e',
-    borderColor: '#22c55e',
-  },
-  noButton: {
-    backgroundColor: '#ef4444',
-    borderColor: '#ef4444',
-  },
-  choiceButtonText: {
-    textAlign: 'center',
-    fontWeight: '500',
-  },
-  whiteText: {
-    color: 'white',
-  },
-  defaultText: {
-    color: '#374151',
-  },
-  inputContainer: {
-    marginBottom: 16,
-  },
-  inputLabel: {
-    fontSize: 16,
-    fontWeight: '500',
-    marginBottom: 8,
-    color: '#111827',
-  },
-  textInput: {
-    borderWidth: 1,
-    borderColor: '#d1d5db',
-    borderRadius: 8,
-    padding: 12,
-    backgroundColor: 'white',
-    color: '#111827',
-  },
-  textArea: {
-    height: 100,
-    textAlignVertical: 'top',
-  },
-  photoButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 12,
-    borderWidth: 1,
-    borderColor: '#9ca3af',
-    borderStyle: 'dashed',
-    borderRadius: 8,
-  },
-  photoButtonText: {
-    color: '#6b7280',
-    marginLeft: 8,
-  },
-  summaryCard: {
-    backgroundColor: 'white',
-    borderRadius: 8,
-    padding: 16,
-    gap: 16,
-  },
-  summaryItem: {
-    marginBottom: 8,
-  },
-  summaryLabel: {
-    fontSize: 12,
-    color: '#6b7280',
-  },
-  summaryValue: {
-    fontWeight: '500',
-    color: '#111827',
-  },
-  navigationContainer: {
-    backgroundColor: 'white',
-    padding: 16,
-    borderTopWidth: 1,
-    borderTopColor: '#e5e7eb',
-  },
-  navigationButtons: {
-    flexDirection: 'row',
-    gap: 12,
-  },
-  navButton: {
-    flex: 1,
-    paddingVertical: 12,
-    borderRadius: 8,
-  },
-  previousButton: {
-    borderWidth: 1,
-    borderColor: '#d1d5db',
-  },
-  previousButtonText: {
-    textAlign: 'center',
-    fontWeight: '500',
-    color: '#374151',
-  },
-  nextButton: {
-    backgroundColor: '#3b82f6',
-  },
-  nextButtonContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  nextButtonText: {
-    textAlign: 'center',
-    fontWeight: '500',
-    color: 'white',
-    marginLeft: 4,
-  },
-});
