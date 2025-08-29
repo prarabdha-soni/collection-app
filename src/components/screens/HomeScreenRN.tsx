@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Alert, StyleSheet } from 'react-native';
-import { Bell, Menu, Clock, Search, Phone } from 'lucide-react-native';
+import { Bell, Menu, Clock, Search, Phone } from 'lucide-react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
@@ -71,34 +70,24 @@ export function HomeScreen() {
 
   const handleClockIn = () => {
     if (!isWithinWorkingHours()) {
-      Alert.alert("Clock-in restricted", "You can only clock-in between 9 AM and 6 PM.");
+      alert("Clock-in restricted: You can only clock-in between 9 AM and 6 PM.");
       return;
     }
     setIsClockedIn(true);
     setClockTime(new Date());
-    Alert.alert("Clocked In", "You have successfully clocked in.");
+    alert("Clocked In: You have successfully clocked in.");
   };
 
   const handleClockOut = () => {
     if (!isWithinWorkingHours()) {
-      Alert.alert("Clock-out restricted", "You can only clock-out between 9 AM and 6 PM.");
+      alert("Clock-out restricted: You can only clock-out between 9 AM and 6 PM.");
       return;
     }
-    Alert.alert(
-      "Clock Out",
-      "Are you sure you want to clock out?",
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "Clock Out",
-          onPress: () => {
-            setIsClockedIn(false);
-            const duration = calculateDuration();
-            Alert.alert("Clocked Out", `You worked for ${duration} today.`);
-          }
-        }
-      ]
-    );
+    if (confirm("Are you sure you want to clock out?")) {
+      setIsClockedIn(false);
+      const duration = calculateDuration();
+      alert(`Clocked Out: You worked for ${duration} today.`);
+    }
   };
 
   const handleClockToggle = () => {
@@ -143,389 +132,149 @@ export function HomeScreen() {
   }, [user]);
 
   return (
-    <ScrollView style={styles.container}>
+    <div className="flex-1 bg-gray-100">
       {/* Header */}
-      <View style={styles.header}>
-        <View style={styles.headerTop}>
-          <TouchableOpacity style={styles.iconButton}>
-            <Menu size={20} color="white" />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Home</Text>
-          <View style={styles.headerRight}>
-            <TouchableOpacity style={styles.iconButton}>
-              <Bell size={20} color="white" />
-            </TouchableOpacity>
-            <View style={styles.badge}>
-              <Text style={styles.badgeText}>187</Text>
-            </View>
-          </View>
-        </View>
+      <div className="bg-blue-500 p-4">
+        <div className="flex items-center justify-between mb-4">
+          <button className="p-2">
+            <Menu size={20} className="text-white" />
+          </button>
+          <h1 className="text-lg font-semibold text-white">Home</h1>
+          <div className="flex items-center gap-2">
+            <button className="p-2">
+              <Bell size={20} className="text-white" />
+            </button>
+            <div className="bg-amber-500 rounded-full px-2 py-1">
+              <span className="text-white text-xs font-medium">187</span>
+            </div>
+          </div>
+        </div>
 
         {/* Agent Info Card */}
-        <View style={styles.agentCard}>
-          <View style={styles.agentInfo}>
-            <View style={styles.agentRow}>
-              <View style={styles.avatar}>
-                <Text style={styles.avatarText}>S</Text>
-              </View>
-              <View style={styles.agentDetails}>
-                <Text style={styles.agentName}>Spandan</Text>
-                <Text style={styles.agentRole}>Sales - demo</Text>
-              </View>
-            </View>
-            <View style={styles.clockSection}>
-              <TouchableOpacity 
-                onPress={handleClockToggle}
-                style={[styles.clockButton, isClockedIn ? styles.clockOutButton : styles.clockInButton]}
+        <div className="bg-white/95 rounded-lg p-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center">
+                <span className="text-white font-bold text-lg">S</span>
+              </div>
+              <div>
+                <h2 className="font-semibold text-lg text-gray-900">Spandan</h2>
+                <p className="text-sm text-gray-500">Sales - demo</p>
+              </div>
+            </div>
+            <div className="text-right">
+              <button 
+                onClick={handleClockToggle}
+                className={`flex items-center gap-1 px-3 py-2 rounded-lg text-white text-sm font-medium ${
+                  isClockedIn ? 'bg-red-500' : 'bg-blue-500'
+                }`}
               >
-                <Clock size={16} color="white" />
-                <Text style={styles.clockButtonText}>
-                  {isClockedIn ? "Clock-Out" : "Clock-In"}
-                </Text>
-              </TouchableOpacity>
+                <Clock size={16} />
+                {isClockedIn ? "Clock-Out" : "Clock-In"}
+              </button>
               {clockTime && (
-                <Text style={styles.clockTime}>
+                <p className="text-xs text-gray-500 mt-1">
                   {isClockedIn ? "In" : "Out"} at {clockTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                </Text>
+                </p>
               )}
-            </View>
-          </View>
+            </div>
+          </div>
           
-          <View style={styles.metricsRow}>
-            <View style={styles.metricCard}>
-              <Text style={styles.metricTitle}>Max. Limit</Text>
-              <Text style={styles.metricValue}>₹10.00</Text>
-              <Text style={styles.metricSubtitle}>Lac</Text>
-            </View>
-            <View style={styles.metricCard}>
-              <Text style={styles.metricTitle}>Collection in Hand</Text>
-              <Text style={styles.metricValue}>₹600</Text>
-            </View>
-            <View style={styles.metricCard}>
-              <Text style={styles.metricTitle}>Available Limit</Text>
-              <Text style={styles.metricValue}>₹9.99</Text>
-              <Text style={styles.metricSubtitle}>Lac</Text>
-            </View>
-          </View>
-        </View>
-      </View>
+          <div className="flex gap-3 mt-4">
+            <div className="flex-1 bg-gray-100 rounded-lg p-3 text-center">
+              <p className="text-xs text-gray-500 font-medium">Max. Limit</p>
+              <p className="text-xl font-bold text-gray-900">₹10.00</p>
+              <p className="text-xs text-gray-500">Lac</p>
+            </div>
+            <div className="flex-1 bg-gray-100 rounded-lg p-3 text-center">
+              <p className="text-xs text-gray-500 font-medium">Collection in Hand</p>
+              <p className="text-xl font-bold text-gray-900">₹600</p>
+            </div>
+            <div className="flex-1 bg-gray-100 rounded-lg p-3 text-center">
+              <p className="text-xs text-gray-500 font-medium">Available Limit</p>
+              <p className="text-xl font-bold text-gray-900">₹9.99</p>
+              <p className="text-xs text-gray-500">Lac</p>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Content */}
-      <View style={styles.content}>
+      <div className="p-4 space-y-4">
         {/* Look Into Section */}
-        <View style={styles.card}>
-          <View style={styles.cardHeader}>
-            <Text style={styles.cardTitle}>Look into</Text>
-          </View>
-          <View style={styles.cardContent}>
-            <View style={[styles.lookIntoItem, styles.successBackground]}>
-              <View style={styles.lookIntoLeft}>
-                <View style={[styles.lookIntoIcon, styles.successIcon]}>
-                  <Text style={styles.iconEmoji}>📋</Text>
-                </View>
-                <Text style={styles.lookIntoText}>Mark visit on unallocated loans</Text>
-              </View>
-              <TouchableOpacity style={styles.actionButton}>
-                <Search size={16} color="gray" />
-                <Text style={styles.actionButtonText}>Search</Text>
-              </TouchableOpacity>
-            </View>
+        <div className="bg-white rounded-lg overflow-hidden">
+          <div className="p-4 border-b border-gray-200">
+            <h3 className="text-base font-semibold text-gray-900">Look into</h3>
+          </div>
+          <div className="p-4 space-y-3">
+            <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+              <div className="flex items-center gap-3 flex-1">
+                <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
+                  <span className="text-white text-sm font-medium">📋</span>
+                </div>
+                <span className="font-medium text-sm text-gray-900">Mark visit on unallocated loans</span>
+              </div>
+              <button className="flex items-center gap-1 border border-gray-300 px-3 py-1.5 rounded-lg">
+                <Search size={16} className="text-gray-500" />
+                <span className="text-sm text-gray-700">Search</span>
+              </button>
+            </div>
 
-            <View style={[styles.lookIntoItem, styles.errorBackground]}>
-              <View style={styles.lookIntoLeft}>
-                <View style={[styles.lookIntoIcon, styles.errorIcon]}>
-                  <Text style={styles.iconEmoji}>⚠️</Text>
-                </View>
-                <Text style={styles.lookIntoText}>7 Missed PTP/Visit/Call</Text>
-              </View>
-              <TouchableOpacity style={styles.actionButton}>
-                <Text style={styles.actionButtonText}>View</Text>
-              </TouchableOpacity>
-            </View>
+            <div className="flex items-center justify-between p-3 bg-red-50 rounded-lg">
+              <div className="flex items-center gap-3 flex-1">
+                <div className="w-8 h-8 bg-red-500 rounded-lg flex items-center justify-center">
+                  <span className="text-white text-sm font-medium">⚠️</span>
+                </div>
+                <span className="font-medium text-sm text-gray-900">7 Missed PTP/Visit/Call</span>
+              </div>
+              <button className="border border-gray-300 px-3 py-1.5 rounded-lg">
+                <span className="text-sm text-gray-700">View</span>
+              </button>
+            </div>
 
-            <View style={[styles.lookIntoItem, styles.infoBackground]}>
-              <View style={styles.lookIntoLeft}>
-                <View style={[styles.lookIntoIcon, styles.infoIcon]}>
-                  <Text style={styles.iconEmoji}>👤</Text>
-                </View>
-                <Text style={styles.lookIntoText}>Facing an issue? Get support</Text>
-              </View>
-              <TouchableOpacity style={styles.actionButton}>
-                <Text style={styles.actionButtonText}>Support</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
+            <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+              <div className="flex items-center gap-3 flex-1">
+                <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                  <span className="text-white text-sm font-medium">👤</span>
+                </div>
+                <span className="font-medium text-sm text-gray-900">Facing an issue? Get support</span>
+              </div>
+              <button className="border border-gray-300 px-3 py-1.5 rounded-lg">
+                <span className="text-sm text-gray-700">Support</span>
+              </button>
+            </div>
+          </div>
+        </div>
 
         {/* Today's Calendar */}
-        <View style={styles.card}>
-          <View style={styles.cardHeader}>
-            <Text style={styles.cardTitle}>Today's Calendar</Text>
-          </View>
-          <View style={styles.cardContent}>
-            <View style={styles.calendarMetrics}>
-              <TouchableOpacity style={[styles.metricCard, styles.defaultBackground]}>
-                <Text style={styles.metricTitle}>Planned Visits</Text>
-                <Text style={styles.metricValue}>{plannedVisits.length}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={[styles.metricCard, styles.successBackground]}>
-                <Text style={styles.metricTitle}>Completed Visits</Text>
-                <Text style={styles.metricValue}>{completedVisits.length}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={[styles.metricCard, styles.warningBackground]}>
-                <Text style={styles.metricTitle}>Pending Visits</Text>
-                <Text style={styles.metricValue}>{pendingVisits.length}</Text>
-              </TouchableOpacity>
-            </View>
+        <div className="bg-white rounded-lg overflow-hidden">
+          <div className="p-4 border-b border-gray-200">
+            <h3 className="text-base font-semibold text-gray-900">Today's Calendar</h3>
+          </div>
+          <div className="p-4 space-y-4">
+            <div className="flex gap-3">
+              <button className="flex-1 bg-gray-100 rounded-lg p-3 text-center">
+                <p className="text-xs text-gray-500 font-medium">Planned Visits</p>
+                <p className="text-xl font-bold text-gray-900">{plannedVisits.length}</p>
+              </button>
+              <button className="flex-1 bg-green-50 rounded-lg p-3 text-center">
+                <p className="text-xs text-gray-500 font-medium">Completed Visits</p>
+                <p className="text-xl font-bold text-gray-900">{completedVisits.length}</p>
+              </button>
+              <button className="flex-1 bg-amber-50 rounded-lg p-3 text-center">
+                <p className="text-xs text-gray-500 font-medium">Pending Visits</p>
+                <p className="text-xl font-bold text-gray-900">{pendingVisits.length}</p>
+              </button>
+            </div>
             
-            <View style={styles.performanceCard}>
-              <Text style={styles.performanceText}>
+            <div className="p-3 bg-gray-100 rounded-lg">
+              <p className="text-sm text-center text-gray-500">
                 Check your collection performance!
-              </Text>
-            </View>
-          </View>
-        </View>
-      </View>
-    </ScrollView>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f3f4f6',
-  },
-  header: {
-    backgroundColor: '#3b82f6',
-    padding: 16,
-  },
-  headerTop: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 16,
-  },
-  iconButton: {
-    padding: 8,
-  },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: 'white',
-  },
-  headerRight: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  badge: {
-    backgroundColor: '#f59e0b',
-    borderRadius: 12,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-  },
-  badgeText: {
-    color: 'white',
-    fontSize: 12,
-    fontWeight: '500',
-  },
-  agentCard: {
-    backgroundColor: 'rgba(255, 255, 255, 0.95)',
-    borderRadius: 8,
-    padding: 16,
-  },
-  agentInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  agentRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  avatar: {
-    width: 48,
-    height: 48,
-    backgroundColor: '#3b82f6',
-    borderRadius: 24,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  avatarText: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 18,
-  },
-  agentDetails: {
-    gap: 2,
-  },
-  agentName: {
-    fontWeight: '600',
-    fontSize: 18,
-    color: '#111827',
-  },
-  agentRole: {
-    fontSize: 14,
-    color: '#6b7280',
-  },
-  clockSection: {
-    alignItems: 'flex-end',
-    gap: 4,
-  },
-  clockButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 8,
-  },
-  clockInButton: {
-    backgroundColor: '#3b82f6',
-  },
-  clockOutButton: {
-    backgroundColor: '#ef4444',
-  },
-  clockButtonText: {
-    color: 'white',
-    fontSize: 14,
-    fontWeight: '500',
-  },
-  clockTime: {
-    fontSize: 12,
-    color: '#6b7280',
-  },
-  metricsRow: {
-    flexDirection: 'row',
-    gap: 12,
-    marginTop: 16,
-  },
-  metricCard: {
-    flex: 1,
-    backgroundColor: '#f3f4f6',
-    borderRadius: 8,
-    padding: 12,
-    alignItems: 'center',
-  },
-  metricTitle: {
-    fontSize: 12,
-    color: '#6b7280',
-    fontWeight: '500',
-  },
-  metricValue: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#111827',
-  },
-  metricSubtitle: {
-    fontSize: 10,
-    color: '#6b7280',
-  },
-  content: {
-    padding: 16,
-    gap: 16,
-  },
-  card: {
-    backgroundColor: 'white',
-    borderRadius: 8,
-    overflow: 'hidden',
-  },
-  cardHeader: {
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e5e7eb',
-  },
-  cardTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#111827',
-  },
-  cardContent: {
-    padding: 16,
-    gap: 12,
-  },
-  lookIntoItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: 12,
-    borderRadius: 8,
-  },
-  lookIntoLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    flex: 1,
-  },
-  lookIntoIcon: {
-    width: 32,
-    height: 32,
-    borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  iconEmoji: {
-    color: 'white',
-    fontSize: 14,
-    fontWeight: '500',
-  },
-  lookIntoText: {
-    fontWeight: '500',
-    fontSize: 14,
-    color: '#111827',
-  },
-  actionButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    borderWidth: 1,
-    borderColor: '#d1d5db',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 8,
-  },
-  actionButtonText: {
-    fontSize: 14,
-    color: '#374151',
-  },
-  successBackground: {
-    backgroundColor: '#f0fdf4',
-  },
-  successIcon: {
-    backgroundColor: '#22c55e',
-  },
-  errorBackground: {
-    backgroundColor: '#fef2f2',
-  },
-  errorIcon: {
-    backgroundColor: '#ef4444',
-  },
-  infoBackground: {
-    backgroundColor: '#eff6ff',
-  },
-  infoIcon: {
-    backgroundColor: '#3b82f6',
-  },
-  calendarMetrics: {
-    flexDirection: 'row',
-    gap: 12,
-  },
-  defaultBackground: {
-    backgroundColor: '#f3f4f6',
-  },
-  warningBackground: {
-    backgroundColor: '#fef3c7',
-  },
-  performanceCard: {
-    marginTop: 16,
-    padding: 12,
-    backgroundColor: '#f3f4f6',
-    borderRadius: 8,
-  },
-  performanceText: {
-    fontSize: 14,
-    textAlign: 'center',
-    color: '#6b7280',
-  },
-});

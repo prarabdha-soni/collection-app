@@ -1,20 +1,14 @@
 import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Alert, StyleSheet } from 'react-native';
-import { User, Settings, HelpCircle, FileText, Shield, LogOut, ChevronRight } from 'lucide-react-native';
+import { User, Settings, HelpCircle, FileText, Shield, LogOut, ChevronRight } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 
 export function ProfileScreen() {
   const { user, profile, signOut } = useAuth();
 
   const handleSignOut = () => {
-    Alert.alert(
-      "Sign Out",
-      "Are you sure you want to sign out?",
-      [
-        { text: "Cancel", style: "cancel" },
-        { text: "Sign Out", style: "destructive", onPress: signOut }
-      ]
-    );
+    if (confirm("Are you sure you want to sign out?")) {
+      signOut();
+    }
   };
 
   const menuItems = [
@@ -25,155 +19,62 @@ export function ProfileScreen() {
   ];
 
   return (
-    <ScrollView style={styles.container}>
+    <div className="flex-1 bg-gray-50">
       {/* Header */}
-      <View style={styles.header}>
-        <View style={styles.avatar}>
-          <User size={32} color="white" />
-        </View>
-        <Text style={styles.userName}>
+      <div className="bg-white p-6 text-center border-b border-gray-200">
+        <div className="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+          <User size={32} className="text-white" />
+        </div>
+        <h1 className="text-xl font-bold mb-1 text-gray-900">
           {profile?.display_name || user?.email?.split('@')[0] || 'User'}
-        </Text>
-        <Text style={styles.department}>
+        </h1>
+        <p className="text-gray-500 mb-1">
           {profile?.department || 'Sales Department'}
-        </Text>
-        <Text style={styles.employeeId}>
+        </p>
+        <p className="text-xs text-gray-400">
           Employee ID: {profile?.employee_id || 'EMP001'}
-        </Text>
-      </View>
+        </p>
+      </div>
 
       {/* Menu Items */}
-      <View style={styles.menuContainer}>
+      <div className="bg-white mx-4 mt-4 rounded-lg">
         {menuItems.map((item, index) => {
           const Icon = item.icon;
           return (
-            <TouchableOpacity
+            <button
               key={index}
-              onPress={item.onPress}
-              style={[
-                styles.menuItem,
-                index !== menuItems.length - 1 && styles.menuItemBorder
-              ]}
+              onClick={item.onPress}
+              className={`flex items-center justify-between w-full p-4 ${
+                index !== menuItems.length - 1 ? 'border-b border-gray-100' : ''
+              }`}
             >
-              <View style={styles.menuItemContent}>
-                <View style={styles.iconContainer}>
-                  <Icon size={20} color="#6b7280" />
-                </View>
-                <Text style={styles.menuLabel}>{item.label}</Text>
-              </View>
-              <ChevronRight size={20} color="#9ca3af" />
-            </TouchableOpacity>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                  <Icon size={20} className="text-gray-500" />
+                </div>
+                <span className="font-medium text-gray-900">{item.label}</span>
+              </div>
+              <ChevronRight size={20} className="text-gray-400" />
+            </button>
           );
         })}
-      </View>
+      </div>
 
       {/* Sign Out Button */}
-      <View style={styles.signOutContainer}>
-        <TouchableOpacity onPress={handleSignOut} style={styles.signOutButton}>
-          <LogOut size={20} color="white" />
-          <Text style={styles.signOutText}>Sign Out</Text>
-        </TouchableOpacity>
-      </View>
+      <div className="mx-4 mt-6">
+        <button 
+          onClick={handleSignOut} 
+          className="w-full bg-red-500 rounded-lg p-4 flex items-center justify-center"
+        >
+          <LogOut size={20} className="text-white" />
+          <span className="text-white font-semibold ml-2">Sign Out</span>
+        </button>
+      </div>
 
       {/* App Version */}
-      <View style={styles.versionContainer}>
-        <Text style={styles.versionText}>Version 1.0.0</Text>
-      </View>
-    </ScrollView>
+      <div className="text-center py-8">
+        <p className="text-xs text-gray-400">Version 1.0.0</p>
+      </div>
+    </div>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f9fafb',
-  },
-  header: {
-    backgroundColor: 'white',
-    padding: 24,
-    alignItems: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: '#e5e7eb',
-  },
-  avatar: {
-    width: 80,
-    height: 80,
-    backgroundColor: '#3b82f6',
-    borderRadius: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 16,
-  },
-  userName: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 4,
-    color: '#111827',
-  },
-  department: {
-    color: '#6b7280',
-    marginBottom: 4,
-  },
-  employeeId: {
-    fontSize: 12,
-    color: '#9ca3af',
-  },
-  menuContainer: {
-    backgroundColor: 'white',
-    marginTop: 16,
-    marginHorizontal: 16,
-    borderRadius: 8,
-  },
-  menuItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: 16,
-  },
-  menuItemBorder: {
-    borderBottomWidth: 1,
-    borderBottomColor: '#f3f4f6',
-  },
-  menuItemContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  iconContainer: {
-    width: 40,
-    height: 40,
-    backgroundColor: '#f3f4f6',
-    borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  menuLabel: {
-    fontWeight: '500',
-    color: '#111827',
-  },
-  signOutContainer: {
-    marginHorizontal: 16,
-    marginTop: 24,
-  },
-  signOutButton: {
-    backgroundColor: '#ef4444',
-    borderRadius: 8,
-    padding: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  signOutText: {
-    color: 'white',
-    fontWeight: '600',
-    marginLeft: 8,
-  },
-  versionContainer: {
-    alignItems: 'center',
-    paddingVertical: 32,
-  },
-  versionText: {
-    color: '#9ca3af',
-    fontSize: 12,
-  },
-});

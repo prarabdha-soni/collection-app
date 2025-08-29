@@ -17,7 +17,6 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
-      "react-native": "react-native-web",
     },
   },
   define: {
@@ -25,7 +24,7 @@ export default defineConfig(({ mode }) => ({
   },
   build: {
     rollupOptions: {
-      external: mode === 'development' ? [] : ['react-native'],
+      external: mode === 'development' ? [] : [],
     },
   },
 }));

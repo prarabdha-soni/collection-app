@@ -1,5 +1,4 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 interface AuthScreenTempProps {
   onLogin: () => void;
@@ -7,71 +6,34 @@ interface AuthScreenTempProps {
 
 export default function AuthScreenTemp({ onLogin }: AuthScreenTempProps) {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>FOS Field Hero</Text>
-      <Text style={styles.subtitle}>Sign in to continue</Text>
-      
-      <View style={styles.form}>
-        <View style={styles.inputContainer}>
-          {/* Email input would go here in a real implementation */}
-          <Text style={styles.inputLabel}>Email</Text>
-        </View>
+    <div className="flex-1 flex justify-center items-center p-5 bg-white">
+      <div className="w-full max-w-md">
+        <h1 className="text-3xl font-bold text-center mb-2 text-gray-900">
+          FOS Field Hero
+        </h1>
+        <p className="text-base text-center mb-10 text-gray-500">
+          Sign in to continue
+        </p>
         
-        <View style={styles.inputContainer}>
-          {/* Password input would go here in a real implementation */}
-          <Text style={styles.inputLabel}>Password</Text>
-        </View>
-        
-        <TouchableOpacity style={styles.button} onPress={onLogin}>
-          <Text style={styles.buttonText}>Sign In</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+        <div className="space-y-4">
+          <div className="border border-gray-300 rounded-lg p-4">
+            {/* Email input would go here in a real implementation */}
+            <span className="text-base text-gray-400">Email</span>
+          </div>
+          
+          <div className="border border-gray-300 rounded-lg p-4">
+            {/* Password input would go here in a real implementation */}
+            <span className="text-base text-gray-400">Password</span>
+          </div>
+          
+          <button 
+            className="w-full bg-blue-600 text-white py-4 px-4 rounded-lg font-semibold text-base hover:bg-blue-700 transition-colors"
+            onClick={onLogin}
+          >
+            Sign In
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 20,
-    backgroundColor: 'white',
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 8,
-    color: '#111827',
-  },
-  subtitle: {
-    fontSize: 16,
-    textAlign: 'center',
-    marginBottom: 40,
-    color: '#6b7280',
-  },
-  form: {
-    gap: 16,
-  },
-  inputContainer: {
-    borderWidth: 1,
-    borderColor: '#d1d5db',
-    borderRadius: 8,
-    padding: 16,
-  },
-  inputLabel: {
-    fontSize: 16,
-    color: '#9ca3af',
-  },
-  button: {
-    backgroundColor: '#2563eb',
-    padding: 16,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-});
