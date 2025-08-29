@@ -1,0 +1,44 @@
+{
+  "expo": {
+    "name": "FOS Field Hero",
+    "slug": "fos-field-hero",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./public/favicon.ico",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "app.lovable.df7a4b1504a54b4aa1382db118e2c456"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./public/favicon.ico",
+        "backgroundColor": "#1e293b"
+      },
+      "package": "app.lovable.df7a4b1504a54b4aa1382db118e2c456"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./public/favicon.ico"
+    },
+    "plugins": [
+      "expo-camera",
+      "expo-location",
+      "expo-notifications",
+      "expo-image-picker"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "df7a4b15-04a5-4b4a-a138-2db118e2c456"
+      }
+    }
+  }
+}
