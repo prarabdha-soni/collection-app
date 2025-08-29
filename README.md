@@ -4,7 +4,7 @@ A mobile-first field operations app for loan collection agents built with Expo a
 
 ## Project Info
 
-**URL**: https://lovable.dev/projects/df7a4b15-04a5-4b4a-a138-2db118e2c456
+**URL**: https://vercel.com/projects/fos-app
 
 ## Features
 
@@ -66,15 +66,15 @@ eas build --platform ios
 
 There are several ways of editing your application.
 
-**Use Lovable**
+**Use Vercel**
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/df7a4b15-04a5-4b4a-a138-2db118e2c456) and start prompting.
+Simply visit the [Vercel Project](https://vercel.com/projects/fos-app) and start developing.
 
-Changes made via Lovable will be committed automatically to this repo.
+Changes made via Vercel will be committed automatically to this repo.
 
 **Use your preferred IDE**
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Vercel.
 
 The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 
@@ -123,14 +123,14 @@ This project is built with:
 
 The app can be deployed as:
 
-- **Web App**: Via Lovable platform - click Share -> Publish
+- **Web App**: Via Vercel platform - click Deploy
 - **Mobile App**: Via Expo Application Services (EAS) 
 - **Enterprise**: Internal distribution via TestFlight/Google Play Console
 
-## Can I connect a custom domain to my Lovable project?
+## Can I connect a custom domain to my Vercel project?
 
 Yes, you can!
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+To connect a domain, navigate to Project > Settings > Domains and click Add Domain.
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+Read more here: [Setting up a custom domain](https://vercel.com/docs/concepts/projects/custom-domains)
